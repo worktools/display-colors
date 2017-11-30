@@ -4,7 +4,8 @@ Display Colors
 
 ### Usage
 
-Pages colors into textarea...
+* Open http://repo.tiye.me/chenyong/display-colors/
+* Pages colors into textarea...
 
 ### Workflow
 
