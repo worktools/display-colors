@@ -1,8 +1,5 @@
 
-(ns app.updater (:require [respo.cursor :refer [mutate]]))
+(ns app.updater (:require [respo.cursor :refer [update-states]]))
 
-(defn updater [store op op-data]
-  (case op
-    :states (update store :states (mutate op-data))
-    :inc (update store :data (fn [x] (+ x 1)))
-    store))
+(defn updater [store op data op-id op-time]
+  (case op :states (update-states store data) :hydrate-storage data store))
