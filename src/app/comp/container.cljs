@@ -9,7 +9,8 @@
             [reel.comp.reel :refer [comp-reel]]
             [respo-md.comp.md :refer [comp-md]]
             [app.config :refer [dev?]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            ["color" :as Color]))
 
 (defcomp
  comp-container
@@ -39,11 +40,15 @@
             (fn [idx line]
               [idx
                (div
-                {:style ui/row}
-                (div
-                 {:style {:background-color line,
-                          :height 32,
-                          :width 100,
-                          :font-family ui/font-code}})
-                (<> line))])))))
+                {:style (merge ui/row {:font-family ui/font-code, :font-size 14})}
+                (div {:style {:background-color line, :height 32, :width 100}})
+                (=< 8 nil)
+                (<> line)
+                (=< 16 nil)
+                (try
+                 (<> (-> (Color line) .hsl .round))
+                 (catch
+                  js/Error
+                  error
+                  (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)}))))])))))
     (comp-reel (>> states :reel) reel {}))))
