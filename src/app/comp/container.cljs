@@ -30,11 +30,11 @@
                ui/expand
                ui/textarea
                {:font-family ui/font-code, :padding "8px 8px 200px 8px"}),
-       :value state,
-       :on {:input (fn [e d!] (d! cursor (:value e)))}})
+       :value (:content state),
+       :on {:input (fn [e d!] (d! cursor (assoc state :content (:value e))))}})
      (list->
       {:style (merge ui/expand {:padding "8px 8px 200px 8px"})}
-      (->> (string/split-lines state)
+      (->> (string/split-lines (:content state))
            (map-indexed
             (fn [idx line]
               [idx
