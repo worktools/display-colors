@@ -45,10 +45,21 @@
                 (=< 8 nil)
                 (<> line)
                 (=< 16 nil)
-                (try
-                 (<> (-> (Color line) .hsl .round))
-                 (catch
-                  js/Error
-                  error
-                  (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)}))))])))))
+                (if (string/blank? line)
+                  nil
+                  (try
+                   (<> (-> (Color line) .hsl .round))
+                   (catch
+                    js/Error
+                    error
+                    (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)}))))
+                (=< 16 nil)
+                (if (string/blank? line)
+                  nil
+                  (try
+                   (<> (-> (Color line) .hex))
+                   (catch
+                    js/Error
+                    error
+                    (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)})))))])))))
     (comp-reel (>> states :reel) reel {}))))
