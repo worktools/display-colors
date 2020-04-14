@@ -25,41 +25,39 @@
      {:style {:padding 8}}
      (<> "Display Colors" {:font-family ui/font-fancy, :font-size 24, :font-weight 300}))
     (div
-     {:style (merge ui/expand ui/row)}
+     {:style (merge ui/expand ui/row {:padding "0 12px"})}
      (textarea
       {:style (merge
                ui/expand
                ui/textarea
                {:font-family ui/font-code, :padding "8px 8px 200px 8px"}),
        :value (:content state),
-       :on {:input (fn [e d!] (d! cursor (assoc state :content (:value e))))}})
+       :on {:input (fn [e d!] (d! cursor (assoc state :content (:value e))))},
+       :spellcheck false})
      (list->
-      {:style (merge ui/expand {:padding "8px 8px 200px 8px"})}
+      {:style (merge ui/expand {:padding "8px 8px 200px 8px", :flex 3})}
       (->> (string/split-lines (:content state))
            (map-indexed
             (fn [idx line]
               [idx
-               (div
-                {:style (merge ui/row {:font-family ui/font-code, :font-size 14})}
-                (div {:style {:background-color line, :height 32, :width 100}})
-                (=< 8 nil)
-                (<> line)
-                (=< 16 nil)
-                (if (string/blank? line)
-                  nil
-                  (try
-                   (<> (-> (Color line) .hsl .round))
-                   (catch
-                    js/Error
-                    error
-                    (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)}))))
-                (=< 16 nil)
-                (if (string/blank? line)
-                  nil
-                  (try
-                   (<> (-> (Color line) .hex))
-                   (catch
-                    js/Error
-                    error
-                    (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)})))))])))))
+               (let [color-object (try (Color line) (catch js/Error error nil))]
+                 (div
+                  {:style (merge ui/row {:font-family ui/font-code, :font-size 14})}
+                  (div {:style {:background-color line, :height 32, :width 100}})
+                  (=< 8 nil)
+                  (<> line {:color line, :display :inline-block, :width 200, :font-size 12})
+                  (if (some? color-object)
+                    (<>
+                     (-> color-object .hsl .round)
+                     {:color line, :display :inline-block, :width 200, :margin "0 8px"}))
+                  (if (some? color-object)
+                    (<> (-> color-object .hex) {:color line, :margin "0 8px"}))
+                  (if (string/blank? line)
+                    nil
+                    (try
+                     (do (Color line) nil)
+                     (catch
+                      js/Error
+                      error
+                      (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)}))))))])))))
     (comp-reel (>> states :reel) reel {}))))
