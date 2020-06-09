@@ -29,3 +29,12 @@ body * {
 ::-webkit-resizer {
   background-color:transparent;
 }
+
+
+.clickable-item {
+  transition-duration: 120ms;
+}
+.clickable-item:active {
+  transform: scale(1.05);
+  transition-duration: 0ms;
+}

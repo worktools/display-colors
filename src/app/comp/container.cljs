@@ -10,7 +10,8 @@
             [respo-md.comp.md :refer [comp-md]]
             [app.config :refer [dev?]]
             [clojure.string :as string]
-            ["color" :as Color]))
+            ["color" :as Color]
+            ["copy-to-clipboard" :as copy!]))
 
 (defcomp
  comp-container
@@ -47,9 +48,16 @@
                   (=< 8 nil)
                   (<> line {:color line, :display :inline-block, :width 200, :font-size 12})
                   (if (some? color-object)
-                    (<>
-                     (-> color-object .hsl .round)
-                     {:color line, :display :inline-block, :width 200, :margin "0 8px"}))
+                    (let [color (-> color-object .hsl .round)]
+                      (span
+                       {:inner-text color,
+                        :class-name "clickable-item",
+                        :style {:color line,
+                                :display :inline-block,
+                                :width 200,
+                                :margin "0 8px",
+                                :cursor :pointer},
+                        :on-click (fn [e d!] (copy! color))})))
                   (if (some? color-object)
                     (<> (-> color-object .hex) {:color line, :margin "0 8px"}))
                   (if (string/blank? line)
