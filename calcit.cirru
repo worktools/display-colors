@@ -311,6 +311,11 @@
                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1586834658432) (:text |:spellcheck) (:id |oJjikqEFUZleaf)
                                       |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1586834659586) (:text |false) (:id |r9dFVXgnAZ)
                                     :id |oJjikqEFUZ
+                                  |w $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1594037533572)
+                                    :data $ {}
+                                      |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1594037537095) (:text |:placeholder) (:id |Sd57ArhZnvleaf)
+                                      |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1594037589356) (:text "|\"supported formats:\n\nhsl(200,80%,30%)\nred\nhcl(200,80,80)\nrgb(200,40,130)\n#ccf") (:id |-1Am9r-5Gl)
+                                    :id |Sd57ArhZnv
                                 :id |WeHe4MCJO0
                             :id |z8MgzS7iDq
                           |D $ {} (:type :leaf) (:by |iSHtL1BJf) (:at 1585639321249) (:text |div) (:id |jj_b16rzXq)
