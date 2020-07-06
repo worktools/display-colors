@@ -11,7 +11,22 @@
             [app.config :refer [dev?]]
             [clojure.string :as string]
             ["color" :as Color]
-            ["copy-to-clipboard" :as copy!]))
+            ["copy-to-clipboard" :as copy!]
+            [lilac-parser.core :refer [is+ many+ one-of+ combine+ optional+ parse-lilac]]
+            [lilac-parser.preset :refer [lilac-digit lilac-alphabet lilac-comma-space]]
+            ["d3-color" :refer [hcl]]))
+
+(def lilac-hcl
+  (combine+
+   [(is+ "hcl(" (fn [x] nil))
+    (many+ lilac-digit (fn [xs] (js/parseFloat (string/join "" xs))))
+    lilac-comma-space
+    (many+ lilac-digit (fn [xs] (js/parseFloat (string/join "" xs))))
+    (optional+ (is+ "%") (fn [x] nil))
+    lilac-comma-space
+    (many+ lilac-digit (fn [xs] (js/parseFloat (string/join "" xs))))
+    (optional+ (is+ "%") (fn [x] nil))
+    (is+ ")" (fn [x] nil))]))
 
 (defcomp
  comp-container
@@ -41,31 +56,45 @@
            (map-indexed
             (fn [idx line]
               [idx
-               (let [color-object (try (Color line) (catch js/Error error nil))]
+               (let [color-object (if (string/includes? line "hcl(")
+                                    (let [hcl-info (parse-lilac line lilac-hcl)
+                                          params (->> (:value hcl-info) (filter some?))]
+                                      (if (:ok? hcl-info)
+                                        (let [info (.rgb
+                                                    (hcl
+                                                     (nth params 0)
+                                                     (js/Math.round (* 1 (nth params 1)))
+                                                     (js/Math.round (* 1 (nth params 2)))))]
+                                          (.rgb Color (.-r info) (.-g info) (.-b info)))
+                                        nil))
+                                    (try (Color line) (catch js/Error error nil)))
+                     real-color (if (some? color-object)
+                                  (-> color-object .hsl .round .toString)
+                                  "unknown")]
                  (div
                   {:style (merge ui/row {:font-family ui/font-code, :font-size 14})}
-                  (div {:style {:background-color line, :height 32, :width 100}})
+                  (div {:style {:background-color real-color, :height 32, :width 100}})
                   (=< 8 nil)
-                  (<> line {:color line, :display :inline-block, :width 200, :font-size 12})
+                  (<>
+                   line
+                   {:color real-color, :display :inline-block, :width 200, :font-size 12})
                   (if (some? color-object)
-                    (let [color (-> color-object .hsl .round)]
-                      (span
-                       {:inner-text color,
-                        :class-name "clickable-item",
-                        :style {:color line,
-                                :display :inline-block,
-                                :width 200,
-                                :margin "0 8px",
-                                :cursor :pointer},
-                        :on-click (fn [e d!] (copy! color))})))
-                  (if (some? color-object)
-                    (<> (-> color-object .hex) {:color line, :margin "0 8px"}))
-                  (if (string/blank? line)
+                    (span
+                     {:inner-text real-color,
+                      :class-name "clickable-item",
+                      :style {:color real-color,
+                              :display :inline-block,
+                              :width 200,
+                              :margin "0 8px",
+                              :cursor :pointer},
+                      :on-click (fn [e d!] (copy! real-color))}))
+                  (if (and (some? color-object))
+                    (<>
+                     (if (some? color-object) (-> color-object .hex .toString))
+                     {:color real-color, :margin "0 8px"}))
+                  (if (or (some? color-object) (string/blank? line))
                     nil
-                    (try
-                     (do (Color line) nil)
-                     (catch
-                      js/Error
-                      error
-                      (<> (str error) {:font-family ui/font-normal, :color (hsl 0 90 70)}))))))])))))
+                    (<>
+                     "Failed to parse color"
+                     {:font-family ui/font-normal, :color (hsl 0 90 70)}))))])))))
     (comp-reel (>> states :reel) reel {}))))
