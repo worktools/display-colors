@@ -49,6 +49,7 @@
                {:font-family ui/font-code, :padding "8px 8px 200px 8px"}),
        :value (:content state),
        :on {:input (fn [e d!] (d! cursor (assoc state :content (:value e))))},
+       :placeholder "supported formats:\n\nhsl(200,80%,30%)\nred\nhcl(200,80,80)\nrgb(200,40,130)\n#ccf",
        :spellcheck false})
      (list->
       {:style (merge ui/expand {:padding "8px 8px 200px 8px", :flex 3})}
