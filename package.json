@@ -19,7 +19,7 @@
     "@calcit/procs": "^0.4.19",
     "color": "^3.1.2",
     "copy-to-clipboard": "^3.3.1",
-    "d3-color": "^1.4.1",
+    "d3-color": "^3.1.0",
     "feather-icons": "^4.28.0",
     "shortid": "^2.2.15"
   }
