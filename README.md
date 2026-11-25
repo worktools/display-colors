@@ -4,7 +4,7 @@ Display Colors
 
 ### 使用者需要注意
 
-开发和构建需配对使用正式 Calcit 与 `@calcit/procs` 0.44.0，并重新安装依赖。颜色输入和展示逻辑不变。
+开发和构建需配对使用正式 Calcit 与 `@calcit/procs` 0.45.1，并重新安装依赖。颜色输入和展示逻辑不变。
 
 ### Usage
 
