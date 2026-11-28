@@ -17,7 +17,7 @@
                 {} $ :padding "|2px 0"
               div $ {} $ :style
                 {} (:width 96) (:height 32) (:background-color line) (:border "|1px solid #ddd")
-              =< 8 nil
+              space-x 8
               <> line
           :examples $ []
           :schema $ quote $ Fn String (-> respo.schema/Component)
@@ -53,8 +53,8 @@
         :code $ quote $ ns app.comp.container
           :require (respo-ui.core :as ui)
             respo.core :refer $ defcomp div textarea <> list-> event-value
-            respo.comp.space :refer $ =<
             app.schema :as schema
+            respo.comp.space :refer $ space-x
     'app.main $ %{} 'FileEntry
       :defs $ {}
         '*content $ %{} 'CodeEntry (:doc |)
